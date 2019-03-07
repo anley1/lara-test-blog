@@ -18,4 +18,9 @@ class Post extends Model
     // Timestamps
     // You can change if you want the timestamps too
     public $timestamps = true;
+
+    //Posts for a single user
+    public function user(){
+        return $this->belongsTo('App\User');
+    }
 }
