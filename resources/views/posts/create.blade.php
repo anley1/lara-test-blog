@@ -11,7 +11,7 @@
         </div>
         <textarea name="body" id="article-ckeditor" label="body" form ="post-form" placeholder="body"></textarea> --}}
 
-        {!! Form::open(['action' => 'PostsController@store', 'method' => 'POST']) !!}
+        {!! Form::open(['action' => 'PostsController@store', 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
         {{csrf_field()}}
         <div class="form-group">
             {{Form::label('title', 'Title')}}
@@ -20,6 +20,9 @@
         <div class="form-group">
                 {{Form::label('body', 'Body')}}
                 {{Form::textarea('body', '', ['id'=> 'article-ckeditor', 'class'=> 'form-control', 'placeholder'=>'Title'])}}
+        </div>
+        <div class="form-group">
+            {{Form::file('cover_image')}}
         </div>
         {{Form::submit('Submit', ['class'=>'btn btn-primary'])}}
         {!! Form::close() !!}

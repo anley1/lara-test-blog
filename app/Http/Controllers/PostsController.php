@@ -47,17 +47,42 @@ class PostsController extends Controller
      */
     public function store(Request $request)
     {
-        // do stuff with the data here
-       $this->validate($request, [
-           'title' => 'required',
-           'body' => 'required'
-       ]);
+                       // do stuff with the data here
+    $this->validate($request, [
+        'title' => 'required',
+        'body' => 'required',
+        'cover_image' => 'image|nullable|max:1999'
+        // 1999 is just below 2MB max for apache server for example
+    ]);
+
+    // Handle a file upload
+    if($request->hasFile('cover_image'))
+    {
+        $fileNameWithExt = $request->file('cover_image')->getClientOriginalName();
+        // Get just filename
+        $filename = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
+
+        //Get just extension
+        $extension = $request->file('cover_image')->getClientOriginalExtension();
+
+        // Store filename
+        $fileNameToStore = $filename.'_'.time().'.'.$extension;
+
+        // Upload image
+        $path = $request->file('cover_image')->storeAs('public/cover_images', $fileNameToStore);
+
+    }
+    else
+    {
+        $fileNameToStore = 'noimage.jpg';
+    }
 
        // Create post
        $post = new Post;
        $post->title = $request->input('title');
        $post->body = $request->input('body');
        $post->user_id = auth()->user()->id;
+       $post->cover_image = $fileNameToStore;
        $post->save();
 
        // Go back to index page
@@ -87,6 +112,12 @@ class PostsController extends Controller
     {
         //
         $post = Post::find($id);
+        // Check if the user is the CORRECT user
+        if(auth()->user()->id !==$post->user_id)
+        {
+            return redirect('/posts')->with('error', 'Unauthorised page');
+        }
+
         return view('posts.edit')->with('post', $post);
     }
 
@@ -103,13 +134,39 @@ class PostsController extends Controller
                 // do stuff with the data here
     $this->validate($request, [
         'title' => 'required',
-        'body' => 'required'
+        'body' => 'required',
+        'cover_image' => 'image|nullable|max:1999'
+        // 1999 is just below 2MB max for apache server for example
     ]);
+
+    // Handle a file upload
+    if($request->hasFile('cover_image'))
+    {
+        $fileNameWithExt = $request->file('cover_image')->getClientOriginalName();
+        // Get just filename
+        $filename = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
+
+        //Get just extension
+        $extension = $request->file('cover_image')->getClientOriginalExtension();
+
+        // Store filename
+        $fileNameToStore = $filename.'_'.time().'.'.$extension;
+
+        // Upload image
+        $path = $request->file('cover_image')->storeAs('public/cover_images', $fileNameToStore);
+
+    }
+    else
+    {
+        $fileNameToStore = 'noimage.jpg';
+    }
 
     // Create post
     $post = Post::find($id);
     $post->title = $request->input('title');
     $post->body = $request->input('body');
+    $post->user_id = auth()->user()->id;
+    $post->cover_image = $fileNameToStore;
     $post->save();
 
     // Go back to index page
@@ -126,6 +183,12 @@ class PostsController extends Controller
     {
         //
         $post = Post::find($id);
+        // Check if the user is the CORRECT user
+        if(auth()->user()->id !==$post->user_id)
+        {
+            return redirect('/posts')->with('error', 'Unauthorised page');
+        }
+        
         $post->delete();
         return redirect('/posts')->with('success', 'Post Deleted');
     }
