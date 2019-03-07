@@ -94,6 +94,20 @@ class PostsController extends Controller
     public function update(Request $request, $id)
     {
         //
+                // do stuff with the data here
+    $this->validate($request, [
+        'title' => 'required',
+        'body' => 'required'
+    ]);
+
+    // Create post
+    $post = Post::find($id);
+    $post->title = $request->input('title');
+    $post->body = $request->input('body');
+    $post->save();
+
+    // Go back to index page
+     return redirect('/posts')->with('success','Post Updated');
     }
 
     /**
@@ -105,5 +119,8 @@ class PostsController extends Controller
     public function destroy($id)
     {
         //
+        $post = Post::find($id);
+        $post->delete();
+        return redirect('/posts')->with('success', 'Post Deleted');
     }
 }
