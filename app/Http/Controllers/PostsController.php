@@ -17,8 +17,8 @@ class PostsController extends Controller
         //
         // The below line is using Eloquent
         //$posts = Post::all(); //get all posts in the database
-        $posts = Post::orderBy('title', 'desc')->get(); // descending order
-        $posts = Post::orderBy('title', 'desc')->paginate(1); // descending order paginated 2 per page
+        //$posts = Post::orderBy('title', 'desc')->get(); // descending order
+        $posts = Post::orderBy('created_at', 'desc')->paginate(2); // descending order paginated 2 per page
         //$post = Post::where('title', 'Post One')->get(); // get first post by title for example
         return view('posts.index')->with('posts', $posts);
     }
@@ -48,8 +48,14 @@ class PostsController extends Controller
            'body' => 'required'
        ]);
 
+       // Create post
+       $post = new Post;
+       $post->title = $request->input('title');
+       $post->body = $request->input('body');
+       $post->save();
+
        // Go back to index page
-        return $this->index();
+        return redirect('/posts')->with('success','Post Created');
     }
 
     /**
