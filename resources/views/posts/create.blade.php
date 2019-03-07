@@ -9,6 +9,6 @@
                 <button type="submit" name="button">Submit</button>
             </form>
         </div>
-        <textarea name="body" label="body" form ="post-form" placeholder="body"></textarea>
+        <textarea name="body" id="article-ckeditor" label="body" form ="post-form" placeholder="body"></textarea>
 
 @endsection

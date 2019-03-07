@@ -1,11 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
-    <a href="/posts" class="btn btn-default">Go Back</a>
+    <a href="/posts" class="btn">Go Back</a>
     <h1>{{$post->title}}</h1>
     
     <div>
-        {{$post->body}}
+        {!! html_entity_decode($post->body) !!} 
+        {{-- parse the html as well --}}
     </div>
 
     <hr>
