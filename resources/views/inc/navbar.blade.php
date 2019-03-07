@@ -53,9 +53,6 @@
                       <li class="nav-item">
                           <a class="nav-link" href="/posts">Blog</a>
                       </li>
-                      <li class="nav-item">
-                          <a class="nav-link" href="/posts/create">Create Post</a>
-                      </li>
                     </ul>
 
                   <!-- Right Side Of Navbar -->
