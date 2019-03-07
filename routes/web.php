@@ -20,6 +20,8 @@
 // });
 
 Route::get('/', 'PagesController@index');
+Route::post('/posts', 'PostsController@store');
+
 Route::get('/about', 'PagesController@about');
 Route::get('/services', 'PagesController@services');
 

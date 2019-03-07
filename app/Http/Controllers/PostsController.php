@@ -31,6 +31,7 @@ class PostsController extends Controller
     public function create()
     {
         //
+        return view('posts.create');
     }
 
     /**
@@ -41,7 +42,14 @@ class PostsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // do stuff with the data here
+       $this->validate($request, [
+           'title' => 'required',
+           'body' => 'required'
+       ]);
+
+       // Go back to index page
+        return $this->index();
     }
 
     /**
