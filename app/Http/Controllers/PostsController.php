@@ -16,7 +16,9 @@ class PostsController extends Controller
     {
         //
         // The below line is using Eloquent
-        $posts = Post::all();
+        //$posts = Post::all(); //get all posts in the database
+        $posts = Post::orderBy('title', 'desc')->get(); // descending order
+        //$post = Post::where('title', 'Post One')->get(); // get first post by title for example
         return view('posts.index')->with('posts', $posts);
     }
 
