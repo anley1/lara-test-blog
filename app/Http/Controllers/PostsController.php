@@ -2,7 +2,7 @@
 
 namespace LaraTest\Http\Controllers;
 
-use Illuminate\Http\Request;
+use LaraTest\Http\Requests\BlogPostRequests;
 use LaraTest\Post;
 use Illuminate\Support\Facades\Storage;
 
@@ -46,47 +46,42 @@ class PostsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(BlogPostRequests $request)
     {
-                       // do stuff with the data here
-    $this->validate($request, [
-        'title' => 'required',
-        'body' => 'required',
-        'cover_image' => 'image|nullable|max:1999'
-        // 1999 is just below 2MB max for apache server for example
-    ]);
+        // Check request validation via Form Request class
+        $validated = $request->validated();
 
-    // Handle a file upload
-    if($request->hasFile('cover_image'))
-    {
-        $fileNameWithExt = $request->file('cover_image')->getClientOriginalName();
-        // Get just filename
-        $filename = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
+        // Handle a file upload
+        if($request->hasFile('cover_image'))
+        {
+            $fileNameWithExt = $request->file('cover_image')->getClientOriginalName();
+            // Get just filename
+            $filename = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
 
-        //Get just extension
-        $extension = $request->file('cover_image')->getClientOriginalExtension();
+            //Get just extension
+            $extension = $request->file('cover_image')->getClientOriginalExtension();
 
-        // Store filename
-        $fileNameToStore = $filename.'_'.time().'.'.$extension;
+            // Store filename
+            $fileNameToStore = $filename.'_'.time().'.'.$extension;
 
-        // Upload image
-        $path = $request->file('cover_image')->storeAs('public/cover_images', $fileNameToStore);
+            // Upload image
+            $path = $request->file('cover_image')->storeAs('public/cover_images', $fileNameToStore);
 
-    }
-    else
-    {
-        $fileNameToStore = 'no_image.jpg';
-    }
+        }
+        else
+        {
+            $fileNameToStore = 'no_image.jpg';
+        }
 
-       // Create post
-       $post = new Post;
-       $post->title = $request->input('title');
-       $post->body = $request->input('body');
-       $post->user_id = auth()->user()->id;
-       $post->cover_image = $fileNameToStore;
-       $post->save();
+        // Create post
+        $post = new Post;
+        $post->title = $request->input('title');
+        $post->body = $request->input('body');
+        $post->user_id = auth()->user()->id;
+        $post->cover_image = $fileNameToStore;
+        $post->save();
 
-       // Go back to index page
+        // Go back to index page
         return redirect('/posts')->with('success','Post Created');
     }
 
@@ -100,7 +95,7 @@ class PostsController extends Controller
     {
         // $post = Post::find($id);
         // Check if the post is valid
-        
+
         if ($post == null)
         {
             abort(404);
@@ -135,47 +130,41 @@ class PostsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(BlogPostRequests $request, $id)
     {
-        //
-                // do stuff with the data here
-    $this->validate($request, [
-        'title' => 'required',
-        'body' => 'required',
-        'cover_image' => 'image|nullable|max:1999'
-        // 1999 is just below 2MB max for apache server for example
-    ]);
+        // Check request validation via Form Request class
+        $validated = $request->validated();
+            
+        // Handle a file upload
+        if($request->hasFile('cover_image'))
+        {
+            $fileNameWithExt = $request->file('cover_image')->getClientOriginalName();
+            // Get just filename
+            $filename = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
 
-    // Handle a file upload
-    if($request->hasFile('cover_image'))
-    {
-        $fileNameWithExt = $request->file('cover_image')->getClientOriginalName();
-        // Get just filename
-        $filename = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
+            //Get just extension
+            $extension = $request->file('cover_image')->getClientOriginalExtension();
 
-        //Get just extension
-        $extension = $request->file('cover_image')->getClientOriginalExtension();
+            // Store filename
+            $fileNameToStore = $filename.'_'.time().'.'.$extension;
 
-        // Store filename
-        $fileNameToStore = $filename.'_'.time().'.'.$extension;
+            // Upload image
+            $path = $request->file('cover_image')->storeAs('public/cover_images', $fileNameToStore);
 
-        // Upload image
-        $path = $request->file('cover_image')->storeAs('public/cover_images', $fileNameToStore);
+        }
 
-    }
+        // Create post
+        $post = Post::find($id);
+        $post->title = $request->input('title');
+        $post->body = $request->input('body');
+        $post->user_id = auth()->user()->id;
+        if($request->hasFile('cover_image')){
+            $post->cover_image = $fileNameToStore; // only change if the user changes it
+        }
+        $post->save();
 
-    // Create post
-    $post = Post::find($id);
-    $post->title = $request->input('title');
-    $post->body = $request->input('body');
-    $post->user_id = auth()->user()->id;
-    if($request->hasFile('cover_image')){
-        $post->cover_image = $fileNameToStore; // only change if the user changes it
-    }
-    $post->save();
-
-    // Go back to index page
-     return redirect('/posts')->with('success','Post Updated');
+        // Go back to index page
+        return redirect('/posts')->with('success','Post Updated');
     }
 
     /**

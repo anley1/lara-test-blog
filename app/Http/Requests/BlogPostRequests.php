@@ -2,6 +2,7 @@
 
 namespace LaraTest\Http\Requests;
 
+use LaraTest\Post;
 use Illuminate\Foundation\Http\FormRequest;
 
 class BlogPostRequests extends FormRequest
@@ -13,7 +14,8 @@ class BlogPostRequests extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        // We do not handle authorisation here so we can return true
+        return true;
     }
 
     /**
@@ -24,6 +26,9 @@ class BlogPostRequests extends FormRequest
     public function rules()
     {
         return [
+            'title' => 'required',
+            'body' => 'required',
+            'cover_image' => 'image|nullable|max:1999'
             //
         ];
     }
