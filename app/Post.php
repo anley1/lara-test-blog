@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace LaraTest;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -21,6 +21,6 @@ class Post extends Model
 
     //Posts for a single user
     public function user(){
-        return $this->belongsTo('App\User');
+        return $this->belongsTo('LaraTest\User');
     }
 }

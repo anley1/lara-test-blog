@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace LaraTest\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\User;
+use LaraTest\User;
 
 class HomeController extends Controller
 {

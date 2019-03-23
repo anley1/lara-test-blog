@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace LaraTest;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -29,6 +29,6 @@ class User extends Authenticatable
 
     // Users have many posts
     public function posts(){
-        return $this->hasMany('App\Post');
+        return $this->hasMany('LaraTest\Post');
     }
 }

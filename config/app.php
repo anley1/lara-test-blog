@@ -155,11 +155,11 @@ return [
         /*
          * Application Service Providers...
          */
-        App\Providers\AppServiceProvider::class,
-        App\Providers\AuthServiceProvider::class,
-        // App\Providers\BroadcastServiceProvider::class,
-        App\Providers\EventServiceProvider::class,
-        App\Providers\RouteServiceProvider::class,
+        LaraTest\Providers\AppServiceProvider::class,
+        LaraTest\Providers\AuthServiceProvider::class,
+        // LaraTest\Providers\BroadcastServiceProvider::class,
+        LaraTest\Providers\EventServiceProvider::class,
+        LaraTest\Providers\RouteServiceProvider::class,
         Unisharp\Ckeditor\ServiceProvider::class,
 
     ],

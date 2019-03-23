@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace LaraTest\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Post;
+use LaraTest\Post;
 use Illuminate\Support\Facades\Storage;
 
 class PostsController extends Controller
@@ -96,10 +96,15 @@ class PostsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Post $post)
     {
         //
-        $post = Post::find($id);
+        //$post = Post::find($id);
+        if ($post == null)
+        {
+            abort(404);
+        }
+
         return view('posts.show')->with('post', $post);
     }
 
