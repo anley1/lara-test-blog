@@ -72,4 +72,14 @@ class BlogService
         $post->save();
 
     }
+
+    public function checkPost($post)
+    {
+        // Abort if the post is not valid
+
+        if ($post == null)
+        {
+            abort(404);
+        }
+    }
 }

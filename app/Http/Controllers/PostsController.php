@@ -9,9 +9,14 @@ use LaraTest\Services\BlogService;
 
 class PostsController extends Controller
 {
+    // Create a private blogService class instance to be used
+    // throughout the controller
+    private $blogService;
+
     public function __construct()
     {
         $this->middleware('auth', ['except' => ['index','show']]);
+        $this->blogService = new BlogService();
     }
     /**
      * Display a listing of the resource.
@@ -24,7 +29,7 @@ class PostsController extends Controller
         // The below line is using Eloquent
         //$posts = Post::all(); //get all posts in the database
         //$posts = Post::orderBy('title', 'desc')->get(); // descending order
-        $posts = Post::orderBy('created_at', 'desc')->paginate(4); // descending order paginated 2 per page
+        $posts = Post::orderBy('created_at', 'desc')->paginate(6); // descending order paginated 2 per page
         //$post = Post::where('title', 'Post One')->get(); // get first post by title for example
         return view('posts.index')->with('posts', $posts);
     }
@@ -51,9 +56,8 @@ class PostsController extends Controller
         // Check request validation via Form Request class
         $validated = $request->validated();
 
-        // Handle a file upload
-        $blogService = new BlogService();
-        $blogService->savePost($request);
+        // Handle a file upload via Service layer
+        $this->blogService->savePost($request);
 
         // Go back to index page
         return redirect('/posts')->with('success','Post Created');
@@ -68,12 +72,9 @@ class PostsController extends Controller
     public function show(Post $post)
     {
         // $post = Post::find($id);
-        // Check if the post is valid
 
-        if ($post == null)
-        {
-            abort(404);
-        }
+        // Check if the post is valid
+        $this->blogService->checkPost($post);
 
         return view('posts.show')->with('post', $post);
     }
@@ -84,10 +85,13 @@ class PostsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Post $post)
     {
-        //
-        $post = Post::find($id);
+        
+        //$post = Post::find($id);
+
+        // Check post validity
+        $this->blogService->checkPost($post);
         // Check if the user is the CORRECT user
         if(auth()->user()->id !==$post->user_id)
         {
@@ -110,8 +114,8 @@ class PostsController extends Controller
         $validated = $request->validated();
             
         // Handle a file upload
-        $blogService = new BlogService();
-        $blogService->updatePost($request,$id);
+
+        $this->blogService->updatePost($request,$id);
 
         // Go back to index page
         return redirect('/posts')->with('success','Post Updated');
@@ -123,10 +127,12 @@ class PostsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Post $post)
     {
-        //
-        $post = Post::find($id);
+        // $post = Post::find($id);
+
+        // Check if the post is valid
+        $this->blogService->checkPost($post);
         // Check if the user is the CORRECT user
         if(auth()->user()->id !==$post->user_id)
         {
