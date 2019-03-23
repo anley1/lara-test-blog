@@ -3,6 +3,7 @@
 namespace LaraTest\Http\Requests;
 
 use LaraTest\Post;
+use Illuminate\Http\Request;
 use Illuminate\Foundation\Http\FormRequest;
 
 class BlogPostRequests extends FormRequest
@@ -23,13 +24,38 @@ class BlogPostRequests extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(Request $request)
+    {
+        // Get the http method
+        $method = $request->method();
+
+        switch($method)
+        {
+            case 'POST':
+                return $this->storeRules();
+            case 'PUT':
+                return $this->updateRules();
+        }
+    }
+
+    public function storeRules()
     {
         return [
             'title' => 'required',
             'body' => 'required',
             'cover_image' => 'image|nullable|max:1999'
             //
+        ];
+    }
+
+    public function updateRules()
+    {
+        // Change not needed to the image. This is more for 
+        // demonstration purposes as you can leave the title and 
+        // body unaltered as well. 
+        return [
+            'title' => 'required',
+            'body' => 'required'
         ];
     }
 }
