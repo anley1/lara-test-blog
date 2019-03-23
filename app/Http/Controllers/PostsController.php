@@ -98,8 +98,9 @@ class PostsController extends Controller
      */
     public function show(Post $post)
     {
-        //
-        //$post = Post::find($id);
+        // $post = Post::find($id);
+        // Check if the post is valid
+        
         if ($post == null)
         {
             abort(404);
